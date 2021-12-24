@@ -1547,7 +1547,7 @@ public class StringUtil {
         try {
             int i = Integer.parseInt(intval);
             i = i + 1;
-            String ID = String.valueOf(intval);
+            String ID = String.valueOf(i);
             if (ID.length() < 8)
                 return StringUtil.fillString(ID,'0',8,true);
             else
