@@ -25,12 +25,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SimpleTimeZone;
+import java.util.*;
 import java.util.regex.*;
 
 /** ***************************************************************
@@ -317,6 +312,56 @@ public class StringUtil {
             sb.append(s[i]);
             if ((i+1) < s.length) {
                 sb.append("_");
+            }
+        }
+        return sb.toString();
+    }
+
+    /****************************************************************
+     * Convert camel case identifiers to a reasonable string representation
+     * by inserting spaces at capitals unless there are consecutive capitals,
+     * in which case only insert a space before the last capital in a group.
+     */
+    public static String camelCaseToSep(String input) {
+
+        return camelCaseToSep(input,false,false);
+    }
+
+    /****************************************************************
+     * Convert camel case identifiers to a reasonable string representation
+     * by inserting spaces at capitals unless there are consecutive capitals,
+     * in which case only insert a space before the last capital in a group.
+     * If lowercase is true, lowercase letters unless they appear to be an
+     * acronym.  If @param instance is true then don't lowercase the first
+     * letter even if @param lowercase is true.
+     */
+    public static String camelCaseToSep(String input, boolean lowercase, boolean instance) {
+
+        StringBuffer sb = new StringBuffer();
+        if (input.length() < 2)
+            return input;
+        char[] charar = input.toCharArray();
+        if (lowercase && !instance)
+            sb.append(Character.toLowerCase(charar[0]));
+        else
+            sb.append(charar[0]);
+        for (int i = 1; i < input.length(); i++) {
+            if (Character.isUpperCase(charar[i]) && Character.isLowerCase(charar[i-1])) {
+                if (lowercase)
+                    sb.append(" " + Character.toLowerCase(charar[i]));
+                else
+                    sb.append(" " + charar[i]);
+            }
+            else {
+                if (i < input.length()-1 && Character.isUpperCase(charar[i]) &&
+                        Character.isLowerCase(charar[i+1])) {
+                    if (lowercase)
+                        sb.append(" " + Character.toLowerCase(charar[i]));
+                    else
+                        sb.append(" " + charar[i]);
+                }
+                else
+                    sb.append(charar[i]);
             }
         }
         return sb.toString();
@@ -1713,11 +1758,23 @@ public class StringUtil {
         return out;
     }
 
+    /****************************************************************
+     * Safely shorten a String if it's longer than max
+     */
+    public static String shorten(String s, int max) {
+
+        if (s == null)
+            return s;
+        if (s.length() < max)
+            return s;
+        return s.substring(0,max);
+    }
+
     /** *****************************************************************
      */
     public static void main(String args[]) {
 
-        System.out.println(StringUtil.fillString("111",'0',8,true));
-
+        //System.out.println(StringUtil.fillString("111",'0',8,true));
+        System.out.println(StringUtil.camelCaseToSep("ArtesiaMunicipalNMAirport"));
     }
 }
