@@ -1,11 +1,13 @@
 <project name="SigmaUtils" default="all" basedir=".">
 
+<property name="app.name" value="SigmaUtils"/>
+<property name="build.home" value="build"/>
+<property name="build.classes" value="${build.home}/classes"/>
+<property name="build.test.classes" value="${build.home}/test-classes"/>
+<property name="build.lib" value="${build.home}/lib"/>
+<property environment="env"/>
+
 <target name="init">
-  <property name="app.name" value="SigmaUtils"/>
-  <property name="build.home" value="build"/>
-  <property name="build.classes" value="${build.home}/classes"/>
-  <property name="build.lib" value="${build.home}/lib"/>
-  <property environment="env"/>
   <echo>Java Version via Ant: ${ant.java.version}</echo>
   <echo>Java Version System Prop: ${java.version}</echo>
   <delete includeemptydirs="true" failonerror="false">
@@ -33,8 +35,38 @@
     </fileset>
 </path>
 
+<path id="test.sourcepath">
+    <pathelement path="test/unit/java"/>
+</path>
+
+<path id="classpath.test">
+    <pathelement location="lib/junit-4.12.jar"/>
+    <pathelement location="lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${build.classes}"/>
+</path>
+
+<target name="test-compile" depends="compile">
+    <mkdir dir="${build.test.classes}"/>
+    <javac destdir="${build.test.classes}" includeantruntime="false">
+        <src refid="test.sourcepath"/>
+        <classpath refid="classpath.test"/>
+    </javac>
+</target>
+
+<target name="test" depends="test-compile">
+    <junit printsummary="on" haltonfailure="yes" fork="true">
+        <classpath>
+            <path refid="classpath.test"/>
+            <pathelement location="${build.test.classes}"/>
+        </classpath>
+        <formatter type="brief" usefile="false" />
+        <batchtest>
+            <fileset dir="test/unit/java" includes="**/*Test.java" />
+        </batchtest>
+    </junit>
+</target>
 <!-- target name="all" depends="dist, api_doc" -->
-<target name="all" depends="compile">
+<target name="all" depends="compile,test">
     <jar destfile="${basedir}/sigmaUtils.jar">
         <fileset dir="${build.classes}"/>
     </jar>
@@ -45,4 +77,3 @@
 </target>
 
 </project>
- 
