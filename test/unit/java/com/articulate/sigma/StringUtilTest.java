@@ -62,7 +62,7 @@ public class StringUtilTest {
     @Test
     public void testCamelCase() {
 
-        assertEquals("HowToMarketToPeopleNotLikeYou",StringUtil.toCamelCase("\\n          \\n          How to Market to People Not Like You: \\"));
+        assertEquals("HowToMarketToPeopleNotLikeYou",StringUtil.toCamelCase("\\n          \\n          How Not to Market to People Not Like You: \\"));
 
     }
 }
