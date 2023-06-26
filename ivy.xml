@@ -1,0 +1,7 @@
+<ivy-module version="2.0">
+    <info organisation="org.ontologyportal" module="SigmaUtils"/>
+    <dependencies>
+        <dependency org="com.google.guava" name="guava" rev="19.0"/>
+        <dependency org="junit" name="junit" rev="4.12"/>
+    </dependencies>
+</ivy-module>
