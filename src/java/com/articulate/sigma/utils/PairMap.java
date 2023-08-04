@@ -41,7 +41,7 @@ public class PairMap {
     /** ***************************************************************
      * Read a pair map from a text file
      */
-    public static HashMap<String, HashMap<String,Integer>>  readMap(String fname) {
+    public static HashMap<String, TreeMap<Integer,HashSet<String>>> readMap(String fname) {
 
         HashMap<String, HashMap<String,Integer>> map = new HashMap<>();
         List<String> documents = Lists.newArrayList();
@@ -72,11 +72,12 @@ public class PairMap {
             System.out.println("FileUtil.PairMap.readMap(): " +
                     "Unable to read line in file. Last line successfully read was: " + line);
         }
-        return map;
+        return MapUtils.toKeyedSortedFreqMap(map);
     }
 
     /** ***************************************************************
-     * Save a pair map to a text file
+     * Save a pair map to a text file (in the current directory if
+     * just a bare filename is supplied)
      */
     public static void saveMap(HashMap<String, HashMap<String,Integer>> map, String filename) {
 
