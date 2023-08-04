@@ -639,7 +639,7 @@ public class StringUtil {
     }
 
     /***************************************************************
-     * Convert an ArrayList, to a set of lines
+     * Convert an ArrayList, to a string of separate lines
      */
     public static String arrayListToCRLFString(ArrayList<String> al) {
 
