@@ -83,7 +83,7 @@ public class MapUtils {
     /** ***************************************************************
      * utility method to merge frequency counts of keys
      */
-    public static Map<Integer, HashSet<String>> toSortedFreqMap(Map<String, Integer> map) {
+    public static TreeMap<Integer, HashSet<String>> toSortedFreqMap(Map<String, Integer> map) {
 
         TreeMap<Integer, HashSet<String>> result = new TreeMap<>();
         for (String s : map.keySet()) {
@@ -103,4 +103,16 @@ public class MapUtils {
         return sb.toString();
     }
 
+    /** ***************************************************************
+     * utility method to merge frequency counts of keys
+     */
+    public static HashMap<String, TreeMap<Integer,HashSet<String>>> toKeyedSortedFreqMap(Map<String, HashMap<String, Integer>> map) {
+
+        HashMap<String, TreeMap<Integer,HashSet<String>>> result = new HashMap<>();
+        for (String key : map.keySet()) {
+            TreeMap<Integer, HashSet<String>> sorted = toSortedFreqMap(map.get(key));
+            result.put(key,sorted);
+        }
+        return result;
+    }
 }
