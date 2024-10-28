@@ -13,21 +13,25 @@ property there. Adding
 auxiliary.show.customizer.message=<message>
  will show your customized message when someone attempts to open the customizer.  -->
             <name>SigmaUtils</name>
-            <properties/>
+            <properties>
+                <property-file>nbproject/private/project.properties</property-file>
+                <property name="ant.script">nbproject/ide-targets.xml</property>
+                <property-file>nbproject/build.properties</property-file>
+            </properties>
             <folders>
                 <source-folder>
-                    <label>SigmaUtils</label>
+                    <label>${app.name}</label>
                     <location>.</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>src/java</label>
+                    <label>Source Packages</label>
                     <type>java</type>
                     <location>src/java</location>
                     <encoding>UTF-8</encoding>
                 </source-folder>
                 <source-folder>
-                    <label>test/unit/java</label>
+                    <label>Test Unit</label>
                     <type>java</type>
                     <location>test/unit/java</location>
                     <encoding>UTF-8</encoding>
@@ -35,13 +39,28 @@ auxiliary.show.customizer.message=<message>
             </folders>
             <ide-actions>
                 <action name="build">
+                    <script>${ant.script}</script>
                     <target>compile</target>
                 </action>
+                <action name="clean">
+                    <script>${ant.script}</script>
+                    <target>clean</target>
+                </action>
+                <action name="rebuild">
+                    <script>${ant.script}</script>
+                    <target>clean</target>
+                    <target>dist</target>
+                </action>
                 <action name="test">
+                    <script>${ant.script}</script>
                     <target>test</target>
                 </action>
+                <action name="run">
+                    <script>${ant.script}</script>
+                    <target>run</target>
+                </action>
                 <action name="run.single">
-                    <script>nbproject/ide-targets.xml</script>
+                    <script>${ant.script}</script>
                     <target>run-selected-file-in-java</target>
                     <context>
                         <property>run.class</property>
@@ -53,29 +72,71 @@ auxiliary.show.customizer.message=<message>
                         </arity>
                     </context>
                 </action>
+                <action name="debug">
+                    <script>${ant.script}</script>
+                    <target>debug-nb</target>
+                </action>
+                <action name="debug.single">
+                    <script>${ant.script}</script>
+                    <target>debug-selected-file-in-java</target>
+                    <context>
+                        <property>debug.class</property>
+                        <folder>src/java</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
+                <action name="test.single">
+                    <script>${ant.script}</script>
+                    <target>run-selected-test-in-unit</target>
+                    <context>
+                        <property>test.class</property>
+                        <folder>test/unit/java</folder>
+                        <pattern>\.java$</pattern>
+                        <format>java-name</format>
+                        <arity>
+                            <one-file-only/>
+                        </arity>
+                    </context>
+                </action>
             </ide-actions>
             <export>
                 <type>folder</type>
+                <location>build/test-classes</location>
+                <script>${ant.script}</script>
+                <build-target>test-compile</build-target>
+            </export>
+            <export>
+                <type>folder</type>
                 <location>build/classes</location>
+                <script>${ant.script}</script>
                 <build-target>compile</build-target>
             </export>
             <view>
                 <items>
                     <source-folder style="packages">
-                        <label>src/java</label>
+                        <label>Source Packages</label>
                         <location>src/java</location>
                     </source-folder>
                     <source-folder style="packages">
-                        <label>test/unit/java</label>
+                        <label>Test Unit</label>
                         <location>test/unit/java</location>
                     </source-folder>
                     <source-file>
-                        <location>build.xml</location>
+                        <location>${ant.script}</location>
                     </source-file>
                 </items>
                 <context-menu>
                     <ide-action name="build"/>
+                    <ide-action name="rebuild"/>
+                    <ide-action name="clean"/>
+                    <ide-action name="javadoc"/>
+                    <ide-action name="run"/>
                     <ide-action name="test"/>
+                    <ide-action name="debug"/>
                 </context-menu>
             </view>
             <subprojects/>
@@ -84,13 +145,14 @@ auxiliary.show.customizer.message=<message>
             <compilation-unit>
                 <package-root>src/java</package-root>
                 <classpath mode="compile">lib/guava-19.0.jar</classpath>
-                <built-to>build/classes</built-to>
+                <built-to>${build.classes}</built-to>
                 <source-level>11</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>test/unit/java</package-root>
                 <unit-tests/>
                 <classpath mode="compile">lib/junit-4.13.2.jar:build/classes</classpath>
+                <built-to>${build.test.classes}</built-to>
                 <source-level>11</source-level>
             </compilation-unit>
         </java-data>

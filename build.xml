@@ -28,7 +28,7 @@
                  uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
     </target>
 
-    <property name="app.name" value="SigmaUtils"/>
+    <property name="app.name" value="sigmaUtils"/>
     <property name="build.home" value="build"/>
     <property name="build.classes" value="${build.home}/classes"/>
     <property name="build.test.classes" value="${build.home}/test-classes"/>

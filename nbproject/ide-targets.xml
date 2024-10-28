@@ -1,11 +1,198 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir=".." name="SigmaUtils-IDE">
+
+    <!--
+    ========
+    TASKDEFs
+    ========
+    -->
+
+    <property file="nbproject/private/private.properties"/>
     <import file="../build.xml"/>
+    <property file="nbproject/build.properties"/>
+
+    <path id="rcp">
+        <path path="${run.classpath}"/>
+    </path>
+    <path id="dcp">
+        <path path="${debug.classpath}"/>
+    </path>
+    <path id="tcp">
+        <path path="${run.test.classpath}"/>
+    </path>
+
+    <!--
+    ============
+    INIT SECTION
+    ============
+    -->
+
+    <target name="init" depends="init-ivy">
+        <mkdir dir="${reports.dir}"/>
+        <antcall target="${impl.title}.init"/>
+
+        <tstamp>
+            <format property="TODAY_US" pattern="EEE, d MMM yyyy HHmm Z" locale="en,US"/>
+        </tstamp>
+    </target>
+
+    <!--
+    ===========
+    RUN SECTION
+    ===========
+    -->
+
+    <target name="run" depends="compile" description="Performs a test run of SigmaUtils">
+        <java classname="${main.class}"
+              classpathref="rcp"
+              fork="true">
+            <jvmarg line="${run.jvmargs}"/>
+        </java>
+    </target>
     <target name="run-selected-file-in-java" depends="compile">
         <fail unless="run.class">Must set property 'run.class'</fail>
-        <java classname="${run.class}" failonerror="true" fork="true">
-            <classpath refid="compile.classpath"/>
-            <classpath location="${build.classes}"/>
+        <java classname="${run.class}"
+              failonerror="true"
+              classpathref="rcp"
+              fork="true">
+            <arg line="-h"/>
         </java>
+    </target>
+
+    <!--
+    =============
+    DEBUG SECTION
+    =============
+    -->
+
+    <target name="debug-nb">
+        <nbjpdastart addressproperty="jpda.address" name="${impl.title}" transport="dt_socket">
+            <classpath refid="dcp"/>
+        </nbjpdastart>
+        <!-- TODO configure the main class for your project here: -->
+        <java classname="${main.class}" fork="true">
+            <classpath refid="dcp"/>
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=${jpda.address}"/>
+        </java>
+    </target>
+    <target name="debug-selected-file-in-java" depends="compile">
+        <fail unless="debug.class">Must set property 'debug.class'</fail>
+        <nbjpdastart addressproperty="jpda.address" name="${impl.title}" transport="${debug.transport}">
+            <classpath refid="dcp"/>
+        </nbjpdastart>
+        <java classname="${debug.class}"
+              classpathref="dcp"
+              fork="true">
+            <jvmarg value="-agentlib:jdwp=transport=${debug.transport},address=${jpda.address}"/>
+            <arg line="-h"/>
+        </java>
+    </target>
+
+    <!--
+    ===================
+    RUN TASKS FOR TESTS
+    ===================
+    -->
+
+    <target name="test.unit" depends="clean,test-compile" description="Runs the UnitTestSuite">
+        <junit printsummary="yes"
+               haltonfailure="yes"
+               showoutput="yes"
+               fork="yes">
+            <jvmarg line="${run.jvmargs}"/>
+            <formatter type="plain" usefile="false"/>
+            <classpath>
+                <path refid="tcp"/>
+            </classpath>
+            <test name="${unit.test.suite}" haltonfailure="no" todir="${reports.dir}">
+                <formatter type="xml"/>
+            </test>
+        </junit>
+        <antcall target="junit.report"/>
+    </target>
+    <target name="run-selected-test-in-unit" depends="clean,test-compile">
+        <fail unless="test.class">Must set property 'test.class'</fail>
+        <junit printsummary="yes"
+               haltonfailure="yes"
+               fork="yes"
+               showoutput="yes">
+            <jvmarg line="${run.jvmargs}"/>
+            <formatter type="plain" usefile="false"/>
+            <classpath>
+                <path refid="tcp"/>
+            </classpath>
+            <test name="${test.class}" haltonfailure="no">
+                <formatter type="xml"/>
+            </test>
+        </junit>
+    </target>
+    <target name="junit.report" >
+        <junitreport todir="${reports.dir}">
+            <fileset dir="${reports.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${reports.dir}/html"/>
+        </junitreport>
+        <antcall target="open.junit.report"/>
+    </target>
+    <target name="open.junit.report">
+        <exec executable="sh" osfamily="mac">
+            <arg value="-c"/>
+            <arg value="open -u ${report.html}"/>
+        </exec>
+        <exec executable="sh" osfamily="unix">
+            <arg value="xdg-open ${report.html}"/>
+        </exec>
+    </target>
+
+    <!--
+    =====
+    ADMIN
+    =====
+    -->
+
+    <target name="dist" depends="compile" description="Create the ${dist.jar} file and place in ${dist.dir}.">
+        <manifest file="${manifest.mf}">
+            <attribute name="Built-By" value="${my.name} ${my.email}"/>
+            <attribute name="Specification-Title"
+                       value="${product.Name}"/>
+            <attribute name="Specification-Version"
+                       value="${product.version.major}.${product.version.minor}"/>
+            <attribute name="Specification-Vendor"
+                       value="${spec.vendor}"/>
+            <attribute name="Implementation-Title"
+                       value="${impl.title}"/>
+            <attribute name="Implementation-Version"
+                       value="${product.Version} built on ${TODAY_US}"/>
+            <attribute name="Implementation-Vendor"
+                       value="${nps}, ${moves.institute}, ${savage.research.group}"/>
+            <attribute name="Implementation-URL"
+                       value="${sumo.url}"/>
+            <attribute name="Implementation-Vendor-Id"
+                       value="${impl.vendor.id}"/>
+            <attribute name="Main-Class"
+                       value="${main.class}"/>
+        </manifest>
+        <jar destfile="${dist.jar}"
+             basedir="${build.classes}"
+             manifest="${manifest.mf}">
+            <metainf file="${project.license}"/>
+        </jar>
+        <copy todir="${basedir}" file="${dist.jar}"/> <!-- For SigmaKEE -->
+    </target>
+    <target name="clean" description="Delete old build, lib">
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${build.home}"/>  <!-- avoid problems with package name changes by deleting everything -->
+            <fileset dir="${dist.dir}"/>
+        </delete>
+        <delete includeemptydirs="true" failonerror="false"> <!-- keep local ivy lib up to date -->
+            <fileset dir="${basedir}/lib"> <!-- keep ./lib -->
+                <include name="*.jar"/>
+            </fileset>
+        </delete>
+        <delete file="${app.name}.jar"/>
+    </target>
+    <target name="all" depends="clean,dist">
+        <echo message="System date/time is: ${TODAY_US}"/>
     </target>
 </project>
