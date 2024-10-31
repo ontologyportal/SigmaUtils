@@ -180,17 +180,10 @@
         </jar>
         <copy todir="${basedir}" file="${dist.jar}"/> <!-- For SigmaKEE -->
     </target>
-    <target name="clean" description="Delete old build, lib">
+    <target name="clean" depends="SigmaUtils.clean" description="Delete old build, lib contents">
         <delete includeemptydirs="true" failonerror="false">
-            <fileset dir="${build.home}"/>  <!-- avoid problems with package name changes by deleting everything -->
             <fileset dir="${dist.dir}"/>
         </delete>
-        <delete includeemptydirs="true" failonerror="false"> <!-- keep local ivy lib up to date -->
-            <fileset dir="${basedir}/lib"> <!-- keep ./lib -->
-                <include name="*.jar"/>
-            </fileset>
-        </delete>
-        <delete file="${app.name}.jar"/>
     </target>
     <target name="all" depends="clean,dist">
         <echo message="System date/time is: ${TODAY_US}"/>
