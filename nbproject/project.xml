@@ -15,8 +15,8 @@ auxiliary.show.customizer.message=<message>
             <name>SigmaUtils</name>
             <properties>
                 <property-file>nbproject/private/project.properties</property-file>
-                <property name="ant.script">nbproject/ide-targets.xml</property>
                 <property-file>nbproject/build.properties</property-file>
+                <property name="ant.script">${buildfile}</property>
             </properties>
             <folders>
                 <source-folder>
@@ -105,13 +105,13 @@ auxiliary.show.customizer.message=<message>
             </ide-actions>
             <export>
                 <type>folder</type>
-                <location>build/test-classes</location>
+                <location>${build.test.classes}</location>
                 <script>${ant.script}</script>
                 <build-target>test-compile</build-target>
             </export>
             <export>
                 <type>folder</type>
-                <location>build/classes</location>
+                <location>${build.classes}</location>
                 <script>${ant.script}</script>
                 <build-target>compile</build-target>
             </export>
@@ -151,7 +151,7 @@ auxiliary.show.customizer.message=<message>
             <compilation-unit>
                 <package-root>test/unit/java</package-root>
                 <unit-tests/>
-                <classpath mode="compile">lib/junit-4.13.2.jar:build/classes</classpath>
+                <classpath mode="compile">lib/junit-4.13.2.jar:${build.classes}</classpath>
                 <built-to>${build.test.classes}</built-to>
                 <source-level>11</source-level>
             </compilation-unit>
