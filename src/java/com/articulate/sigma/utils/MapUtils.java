@@ -10,8 +10,6 @@ Authors:
 Adam Pease apease@articulatesoftware.com
 */
 
-import com.google.common.collect.Sets;
-
 import java.util.*;
 
 public class MapUtils {
@@ -22,11 +20,11 @@ public class MapUtils {
 
         HashMap<String, HashSet<String>> map = mapmap.get(superkey);
         if (map == null)
-            map = new HashMap<String, HashSet<String>>();
+            map = new HashMap<>();
         mapmap.put(superkey,map);
         HashSet<String> set = map.get(key);
         if (set == null)
-            set = new HashSet<String>();
+            set = new HashSet<>();
         set.add(element);
         map.put(key,set);
     }
@@ -35,11 +33,11 @@ public class MapUtils {
      * utility method to add a String element to a HashMap of String
      * keys and a value of an HashSet of Strings
      */
-    public static void addToMap(Map<String, HashSet<String>> map, String key, String element) {
+    public static void addToMap(Map<String, Set<String>> map, String key, String element) {
 
-        HashSet<String> al = map.get(key);
+        Set<String> al = map.get(key);
         if (al == null)
-            al = new HashSet<String>();
+            al = new HashSet<>();
         al.add(element);
         map.put(key, al);
     }
@@ -75,7 +73,7 @@ public class MapUtils {
 
         HashSet<String> al = map.get(count);
         if (al == null)
-            al = new HashSet<String>();
+            al = new HashSet<>();
         al.add(key);
         map.put(count, al);
     }
@@ -97,9 +95,9 @@ public class MapUtils {
      */
     public static String sortedFreqMapToString(Map<Integer, HashSet<String>> map) {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i : map.keySet())
-            sb.append(i + "=" + map.get(i) + "\n");
+            sb.append(i).append("=").append(map.get(i)).append("\n");
         return sb.toString();
     }
 
