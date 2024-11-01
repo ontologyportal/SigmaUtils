@@ -307,7 +307,7 @@ public class StringUtil {
     public static String spacesToUnderlines(String input) {
 
         String[] s = input.split("\\s+");
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length; i++) {
             sb.append(s[i]);
             if ((i+1) < s.length) {
@@ -337,7 +337,7 @@ public class StringUtil {
      */
     public static String camelCaseToSep(String input, boolean lowercase, boolean instance) {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         if (input.length() < 2)
             return input;
         char[] charar = input.toCharArray();
@@ -371,7 +371,7 @@ public class StringUtil {
      */
     public static String camelCaseToUnderlines(String input) {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         char lastChar = ' ';
         for (char c : input.toCharArray()) {
             if (Character.isUpperCase(c) && Character.isLowerCase(lastChar))
@@ -401,7 +401,7 @@ public class StringUtil {
     public static String toCamelCase(String input) {
 
         //System.out.println("toCamelCase(): " + input.toCharArray());
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         char lastChar = ' ';
         for (char c : input.toCharArray()) {
             //System.out.println(sb.toString());
@@ -629,7 +629,7 @@ public class StringUtil {
 
         if (al == null || al.size() < 1)
             return "";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < al.size(); i++) {
             if (i != 0)
                 sb.append(" ");
@@ -641,11 +641,11 @@ public class StringUtil {
     /***************************************************************
      * Convert an ArrayList, to a string of separate lines
      */
-    public static String arrayListToCRLFString(ArrayList<String> al) {
+    public static String arrayListToCRLFString(List<String> al) {
 
         if (al == null || al.size() < 1)
             return "";
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < al.size(); i++) {
             if (i != 0)
                 sb.append("\n");
@@ -954,7 +954,7 @@ public class StringUtil {
             System.out.println("Error in StringUtil.allCapsToSUMOID(): str is null");
             return "";
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         boolean under = false;
         for (int i = 0; i < str.length(); i++) {
             if (str.charAt(i) == '_')
@@ -1612,7 +1612,7 @@ public class StringUtil {
 
         if (StringUtil.emptyString(input))
             return null;
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         if (Character.isJavaIdentifierStart(input.charAt(0)))
             if (upcaseFirst)
                 result.append(Character.toUpperCase(input.charAt(0)));
@@ -1638,20 +1638,20 @@ public class StringUtil {
     /** *****************************************************************
      */
     public static String indent(int num, String indentChars) {
-        
-        StringBuffer sb = new StringBuffer();
+
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < num; i++)
             sb.append(indentChars);
         return sb.toString();
     }
-    
+
 
     /** *****************************************************************
      * Find the parenthesis that balances the one in st at character pIndex
      * @return -1 if not found
      */
     public static int findBalancedParen(int pIndex, String st) {
-        
+
         int parenLevel = 1;
         for (int i = pIndex + 1; i < st.length(); i++) {
             if (st.charAt(i) == '(')
@@ -1664,18 +1664,18 @@ public class StringUtil {
         }
         return -1;
     }
-    
+
     /** *****************************************************************
      * Fill a string with the desired character up to the totalLength.
      * If string is null return a completely filled string.
      */
     public static String fillString(String st, char fillchar, int totalLength, boolean prepend) {
-        
-        StringBuffer result = null;
+
+        StringBuilder result = null;
         if (st != null)
-            result = new StringBuffer(st);
+            result = new StringBuilder(st);
         else
-            result = new StringBuffer("");
+            result = new StringBuilder("");
         for (int i = 0; i < totalLength - st.length(); i++) {
             if (prepend)
                 result.insert(0, fillchar);
