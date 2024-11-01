@@ -5,3 +5,5 @@ lib
 .idea
 *.iml
 .ivy
+/nbproject/private/
+/MANIFEST.MF

@@ -1,7 +1,14 @@
 <ivy-module version="2.0">
     <info organisation="org.ontologyportal" module="SigmaUtils"/>
+    <configurations>
+        <conf name="api" description="Provide API"/>
+        <conf name="test" extends="api" visibility="private" description="For testing our API"/>
+    </configurations>
+    <publications>
+        <artifact name="filter-api" type="jar" conf="api" ext="jar"/>
+    </publications>
     <dependencies>
-        <dependency org="com.google.guava" name="guava" rev="19.0"/>
-        <dependency org="junit" name="junit" rev="4.12"/>
+        <dependency org="com.google.guava" name="guava" rev="19.0" conf="api->default"/>
+        <dependency org="junit" name="junit" rev="4.13.2" conf="test->default"/>
     </dependencies>
 </ivy-module>
