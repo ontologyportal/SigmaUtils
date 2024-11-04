@@ -59,6 +59,13 @@ public class PairMap {
                 String[] pairs = remain.split(",");
                 for (String pair : pairs) {
                     String[] p = pair.split(":");
+                    if (p.length != 2) {
+                        System.out.println("FileUtil.PairMap.readMap(): " +
+                                "bad format in file " + fname + ". Last line successfully read was: " + line);
+                        System.out.println("pair: " + pair);
+                        System.out.println("key: " + key);
+                        System.out.println("remain: " + remain);
+                    }
                     String modifier = p[0];
                     String count = p[1];
                     int cint = Integer.parseInt(count);
@@ -70,7 +77,7 @@ public class PairMap {
         catch (Exception e) {
             e.printStackTrace();
             System.out.println("FileUtil.PairMap.readMap(): " +
-                    "Unable to read line in file. Last line successfully read was: " + line);
+                    "Unable to read line in file " + fname + ". Last line successfully read was: " + line);
         }
         return MapUtils.toKeyedSortedFreqMap(map);
     }
