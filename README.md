@@ -2,7 +2,7 @@
 Sigma utilities refactored from sigmakee
 
 ## To build/run/debug using the NetBeans IDE
-Define a nbproject/private/private properties with these keys:
+Define a nbproject/private/private.properties file with these keys:
 
 \# private properties\
 javaapis.dir=${user.home}/javaapis\
