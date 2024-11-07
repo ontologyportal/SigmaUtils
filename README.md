@@ -1,7 +1,7 @@
 # SigmaUtils
 Sigma utilities refactored from sigmakee
 
-## To build/run/debug using the NetBeans IDE
+## To build/run/debug/test using the NetBeans IDE
 Define a nbproject/private/private.properties file with these keys:
 
 \# private properties\
