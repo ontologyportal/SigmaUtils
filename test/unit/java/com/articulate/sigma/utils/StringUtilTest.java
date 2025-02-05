@@ -1,11 +1,10 @@
-package com.articulate.sigma;
+package com.articulate.sigma.utils;
 
 //This software is released under the GNU Public License
 //<http://www.gnu.org/copyleft/gpl.html>.
 // Copyright 2019 Infosys
 // adam.pease@infosys.com
 
-import com.articulate.sigma.utils.StringUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -63,6 +62,25 @@ public class StringUtilTest {
     public void testCamelCase() {
 
         assertEquals("HowToMarketToPeopleNotLikeYou",StringUtil.toCamelCase("\\n          \\n          How to Market to People Not Like You: \\"));
+    }
 
+    @Test
+    public void testUrlExists() {
+
+        assertTrue(StringUtil.urlExists("ftp://ftp1.freebsd.org/pub/FreeBSD/"));
+    }
+
+    @Test
+    public void testCamelCaseToSep() {
+
+        String exp = "Artesia Municipal NM Airport";
+        assertEquals(exp, StringUtil.camelCaseToSep("ArtesiaMunicipalNMAirport"));
+    }
+
+    @Test
+    public void testFillString() {
+
+        String exp = "00000111";
+        assertEquals(exp, StringUtil.fillString("111",'0',8,true));
     }
 }
