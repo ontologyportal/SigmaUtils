@@ -123,7 +123,6 @@ public class MBoxReader {
                     curFromLine = processBody(reader, record);
                     records.add(record); //Emit the completed record.
                 }
-                reader.close(); //close the current file.
             }
             catch (IOException e) {
                 //There was a problem processing the current file, but maybe the
