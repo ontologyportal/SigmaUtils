@@ -32,13 +32,13 @@
     <property name="app.name" value="sigmaUtils"/>
     <property name="build.home" value="build"/>
     <property name="build.classes" value="${build.home}/classes"/>
-    <property name="build.test.classes" value="${build.home}/test-classes"/>
+    <property name="build.test.classes" value="${build.home}/test/classes"/>
     <!--<property name="build.lib" value="${build.home}/lib"/>-->
     <property environment="env"/>
 
     <property name="javac.release" value="11"/>
     <property name="unit.test.suite" value="com.articulate.sigma.UnitTestSuite"/>
-    <property name="reports.dir" value="${build.test.classes}/results"/>
+    <property name="reports.dir" value="${build.home}/test/results"/>
     <property name="report.html" value="file:${basedir}/${reports.dir}/html/index.html"/>
 
     <condition property="isUnixNotMac">
@@ -98,6 +98,7 @@
             <src refid="test.sourcepath"/>
             <classpath refid="classpath.test"/>
         </javac>
+        <mkdir dir="${reports.dir}"/>
     </target>
 
     <!--
