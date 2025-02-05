@@ -41,8 +41,7 @@ public class FileUtil {
         List<String> documents = Lists.newArrayList();
         File f = new File(filename);
         String line = null;
-        try {
-            BufferedReader bf = new BufferedReader(new FileReader(f));
+        try (BufferedReader bf = new BufferedReader(new FileReader(f))) {
             while ((line = bf.readLine()) != null) {
                 if (!includeBlanks && (line == null || line.equals("")))
                     continue;
@@ -51,7 +50,7 @@ public class FileUtil {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println("FileUtil.readLines(): " +
+            System.err.println("FileUtil.readLines(): " +
                     "Unable to read line in file. Last line successfully read was: " + line);
         }
         return documents;
@@ -67,7 +66,7 @@ public class FileUtil {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println("FileUtil.delete(): Unable to delete: " + filename);
+            System.err.println("FileUtil.delete(): Unable to delete: " + filename);
         }
     }
 
@@ -78,9 +77,7 @@ public class FileUtil {
         System.out.println("FileUtil.writeLines(): filename: " + filename);
         System.out.println("FileUtil.writeLines(): " + lines.size());
         File f = new File(filename);
-        PrintWriter pw = null;
-        try {
-            pw = new PrintWriter(f);
+        try (PrintWriter pw = new PrintWriter(f)) {
             for (String line : lines) {
                 pw.println(line);
                 //System.out.println("FileUtil.writeLines(): line: " + line);
@@ -88,10 +85,8 @@ public class FileUtil {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println("FileUtil.writeLines(): Unable to write line in file " + filename);
+            System.err.println("FileUtil.writeLines(): Unable to write line in file " + filename);
         }
-        pw.flush();
-        pw.close();
     }
 
     /****************************************************************
@@ -104,21 +99,21 @@ public class FileUtil {
 
         String fnameMinus = filename + ".minus";
         String fnameNew = filename + ".new";
-        PrintWriter pwMinus = null;
-        PrintWriter pwNew = null;
         includeBlanks = true;
-        try {
-            pwNew = new PrintWriter(new FileWriter(fnameNew, false));
-            pwMinus = new PrintWriter(new FileWriter(fnameMinus, false));
-            ArrayList<String> lines = (ArrayList) readLines(filename, false);
+        try (PrintWriter pwNew = new PrintWriter(new FileWriter(fnameNew, false));
+            PrintWriter pwMinus = new PrintWriter(new FileWriter(fnameMinus, false))) {
+            List<String> lines = (ArrayList) readLines(filename, false);
             System.out.println("splitSttaements(): read file " + filename + " with " + lines.size() + " lines");
+            String s;
+            int parenLevel;
+            boolean inQuote;
             for (int i = 0; i < lines.size(); i++) {
-                String s = lines.get(i);
+                s = lines.get(i);
                 System.out.println(s);
                 if (s.contains(pattern) && !s.startsWith(";")) {
                     pwNew.println(s);
-                    int parenLevel = 0;
-                    boolean inQuote = false;
+                    parenLevel = 0;
+                    inQuote = false;
                     do {
                         for (int j = 0; j < s.length(); j++) {
                             if (s.charAt(j) == '(' && !inQuote)
@@ -140,20 +135,8 @@ public class FileUtil {
             }
         }
         catch (Exception ex) {
-            System.out.println("Error with " + filename + ": " + ex.getMessage());
+            System.err.println("Error with " + filename + ": " + ex.getMessage());
             ex.printStackTrace();
-        }
-        finally {
-            try {
-                if (pwNew != null)
-                    pwNew.close();
-                if (pwMinus != null)
-                    pwMinus.close();
-            }
-            catch (Exception ioe) {
-                ioe.printStackTrace();
-                System.out.println(ioe.getMessage());
-            }
         }
     }
 
@@ -185,7 +168,7 @@ public class FileUtil {
 
         File root = new File(path);
         File[] list = root.listFiles();
-        ArrayList<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
         if (list == null) return result;
         for (File f : list) {
             if (f.isDirectory())
