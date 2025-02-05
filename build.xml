@@ -41,6 +41,15 @@
     <property name="reports.dir" value="${build.test.classes}/results"/>
     <property name="report.html" value="file:${basedir}/${reports.dir}/html/index.html"/>
 
+    <condition property="isUnixNotMac">
+        <and>
+            <os family="unix"/>
+            <not>
+                <os family="mac"/>
+            </not>
+        </and>
+    </condition>
+
     <target name="init" depends="init-ivy">
         <echo>Java Version via Ant: ${ant.java.version}</echo>
         <echo>Java Version System Prop: ${java.version}</echo>
@@ -96,8 +105,8 @@
     UNIT TESTS
     ==========
     -->
-
-    <target name="test" depends="test-compile" description="Runs the UnitTestSuite">
+    <target name="test" depends="test.unit"/>
+    <target name="test.unit" depends="test-compile" description="Runs the UnitTestSuite">
         <junit printsummary="on"
                showoutput="yes"
                haltonfailure="yes"
