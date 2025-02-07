@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,10 +30,10 @@ public class MBoxReader {
     //Enumeration of the property names we'll use:
     public static String PROP_NAME_SENDER		= "Sender";
     public static String PROP_NAME_DATE			= "MessageDate";
-    public static String PROP_NAME_SENDER_INFO	= "SenderInfo";
+    public static String PROP_NAME_SENDER_INFO          = "SenderInfo";
     public static String PROP_NAME_BODY			= "Body";
     public static String PROP_NAME_FACTS		= "Facts";
-    public static HashSet<HashMap<String,String>> records = new HashSet<>();
+    public static Set<Map<String,String>> records = new HashSet<>();
 
     /** ***************************************************************
      * This regular expression will be used to extract fields from the From
@@ -49,7 +52,7 @@ public class MBoxReader {
     public void execute(String path) {
 
         //Get the paths of the mbox files to process:
-        ArrayList<String> mboxFiles = new ArrayList<>();
+        List<String> mboxFiles = new ArrayList<>();
         File folder = new File(path);
         if (!folder.exists()) {
             System.out.println("Error in MBoxReader.execute(): '" + folder + "' doesn't exist ");
@@ -62,9 +65,9 @@ public class MBoxReader {
             listOfFiles = folder.listFiles();
 
             for (File file : listOfFiles) {
-                if (file.getName().indexOf(".") == -1)
+                if (!file.getName().contains("."))
                     mboxFiles.add(file.getName());
-                if (file.getName().indexOf(".sbd") != -1)
+                if (file.getName().contains(".sbd"))
                     execute(folder.getName() + File.separator + file.getName());
             }
 
@@ -74,9 +77,9 @@ public class MBoxReader {
         // Now that we have processed the configuration, we're ready to
         // ;oop over each of the files to parse:
         for (String file : mboxFiles) {
-            try {
+            try
                 //Open the current file:
-                BufferedReader reader = new BufferedReader(new FileReader(file));
+                (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 // Process the current file. The first line of each message should be
                 // "From <sender> <date> <more info>":
                 String curFromLine = reader.readLine();
@@ -104,7 +107,7 @@ public class MBoxReader {
 
                     //Create a new Record for this message and add the from line
                     //fields as properties:
-                    HashMap<String,String> record = new HashMap();
+                    Map<String,String> record = new HashMap();
 
                     record.put(PROP_NAME_SENDER, sender);
                     record.put(PROP_NAME_DATE, date);
@@ -120,7 +123,6 @@ public class MBoxReader {
                     curFromLine = processBody(reader, record);
                     records.add(record); //Emit the completed record.
                 }
-                reader.close(); //close the current file.
             }
             catch (IOException e) {
                 //There was a problem processing the current file, but maybe the
@@ -133,7 +135,7 @@ public class MBoxReader {
 
     /** ***************************************************************
      */
-    private void processHeaders(BufferedReader reader, HashMap<String,String> record) {
+    private void processHeaders(BufferedReader reader, Map<String,String> record) {
 
         try {
             //Loop until we reach a blank line, which indicates the end of the
@@ -157,7 +159,7 @@ public class MBoxReader {
             }
         }
         catch (IOException ioe) {
-            System.out.println("Error in MBoxReader.processHeaders()");
+            System.err.println("Error in MBoxReader.processHeaders()");
             ioe.printStackTrace();
         }
     }
@@ -178,7 +180,7 @@ public class MBoxReader {
      *
      * @throws IOException
      */
-    private String processBody(BufferedReader reader, HashMap record) {
+    private String processBody(BufferedReader reader, Map<String,String> record) {
 
         String body = "";
         String fromLine = null;
@@ -203,7 +205,7 @@ public class MBoxReader {
             record.put(PROP_NAME_BODY, body); // Add the body to the record:
         }
         catch (IOException ioe) {
-            System.out.println("Error in MBoxReader.processBody()");
+            System.err.println("Error in MBoxReader.processBody()");
             ioe.printStackTrace();
         }
         return fromLine;
@@ -214,7 +216,7 @@ public class MBoxReader {
     public void extractInfo() {
 
         System.out.println("In MBoxReader.extractInfo()");
-        for (HashMap<String,String> element : records) {
+        for (Map<String,String> element : records) {
             if (element.keySet().contains(PROP_NAME_BODY)) {
                 String body = com.articulate.sigma.utils.StringUtil.removeHTML(element.get(PROP_NAME_BODY));
                 System.out.println("In MBoxReader.extractInfo() from " + body);

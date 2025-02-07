@@ -2,11 +2,11 @@
 copyright Teknowledge (c) 2003 and reused under the terms of the GNU license.
 This software is released under the GNU Public License <http://www.gnu.org/copyleft/gpl.html>.
 Users of this code also consent, by use of this code, to credit Articulate Software
-and Teknowledge in any writings, briefings, publications, presentations, or 
-other representations of any software which incorporates, builds on, or uses this 
+and Teknowledge in any writings, briefings, publications, presentations, or
+other representations of any software which incorporates, builds on, or uses this
 code.  Please cite the following article in any publication with references:
 
-Pease, A., (2003). The Sigma Ontology Development Environment, 
+Pease, A., (2003). The Sigma Ontology Development Environment,
 in Working Notes of the IJCAI-2003 Workshop on Ontology and Distributed Systems,
 August 9, Acapulco, Mexico.
 
@@ -20,8 +20,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
-/** *************************************************************** 
+/** ***************************************************************
  * A utility class that defines static methods for working with Sets
  * and other Collections.
  */
@@ -40,22 +41,21 @@ public class SetUtil {
      *
      */
     public static void removeDuplicates(Collection collection) {
-    	
+
         try {
-            HashSet hs = new HashSet();
-            Object obj = null;
+            Set hs = new HashSet();
+            Object obj;
             for (Iterator it = collection.iterator(); it.hasNext();) {
                 obj = (Object) it.next();
-                if (hs.contains(obj)) 
-                    it.remove();                
-                else 
-                    hs.add(obj);                
+                if (hs.contains(obj))
+                    it.remove();
+                else
+                    hs.add(obj);
             }
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        return;
     }
 
     /** ***************************************************************
@@ -87,23 +87,23 @@ public class SetUtil {
      * @return A String
      */
     public static String plistMatch(List<String> plist, String key) {
-    	
+
         String ans = "";
         try {
             int plistSize = plist.size();
             if ((plistSize > 1) && ((plistSize % 2) == 0)) {
                 int valIdx = -1;
-                String str = null;
+                String str;
                 for (int i = 0; i < plistSize; i++) {
                     str = plist.get(i);
                     if (i == valIdx) {
                         ans = str;
                         break;
                     }
-                    if ((i % 2) != 0) 
-                        continue;                    
-                    if (key.matches(str)) 
-                        valIdx = (i + 1);                    
+                    if ((i % 2) != 0)
+                        continue;
+                    if (key.matches(str))
+                        valIdx = (i + 1);
                 }
             }
         }
@@ -124,21 +124,20 @@ public class SetUtil {
      *
      */
     public static void removeByPattern(List seq, String regex) {
-    	
+
         try {
             if ((seq instanceof List) && com.articulate.sigma.utils.StringUtil.isNonEmptyString(regex)) {
-                Object obj = null;
+                Object obj;
                 for (ListIterator it = seq.listIterator(); it.hasNext();) {
                     obj = (Object) it.next();
-                    if (obj.toString().matches(regex)) 
-                        it.remove();                    
+                    if (obj.toString().matches(regex))
+                        it.remove();
                 }
             }
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        return;
     }
 
     /** **************************************************************
@@ -152,10 +151,10 @@ public class SetUtil {
      *
      */
     public static void retainByPattern(List seq, String regex) {
-    	
+
         try {
             if ((seq instanceof List) && com.articulate.sigma.utils.StringUtil.isNonEmptyString(regex)) {
-                Object obj = null;
+                Object obj;
                 for (ListIterator it = seq.listIterator(); it.hasNext();) {
                     obj = (Object) it.next();
                     if (!obj.toString().matches(regex)) {
@@ -167,7 +166,6 @@ public class SetUtil {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        return;
     }
 
 }  // SetUtil

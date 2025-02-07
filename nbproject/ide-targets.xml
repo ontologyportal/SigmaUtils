@@ -94,22 +94,6 @@
     ===================
     -->
 
-    <target name="test.unit" depends="clean,test-compile" description="Runs the UnitTestSuite">
-        <junit printsummary="yes"
-               haltonfailure="yes"
-               showoutput="yes"
-               fork="yes">
-            <jvmarg line="${run.jvmargs}"/>
-            <formatter type="plain" usefile="false"/>
-            <classpath>
-                <path refid="tcp"/>
-            </classpath>
-            <test name="${unit.test.suite}" haltonfailure="no" todir="${reports.dir}">
-                <formatter type="xml"/>
-            </test>
-        </junit>
-        <antcall target="junit.report"/>
-    </target>
     <target name="run-selected-test-in-unit" depends="clean,test-compile">
         <fail unless="test.class">Must set property 'test.class'</fail>
         <junit printsummary="yes"
@@ -125,24 +109,6 @@
                 <formatter type="xml"/>
             </test>
         </junit>
-    </target>
-    <target name="junit.report" >
-        <junitreport todir="${reports.dir}">
-            <fileset dir="${reports.dir}">
-                <include name="TEST-*.xml"/>
-            </fileset>
-            <report format="frames" todir="${reports.dir}/html"/>
-        </junitreport>
-        <antcall target="open.junit.report"/>
-    </target>
-    <target name="open.junit.report">
-        <exec executable="sh" osfamily="mac">
-            <arg value="-c"/>
-            <arg value="open -u ${report.html}"/>
-        </exec>
-        <exec executable="sh" osfamily="unix">
-            <arg value="xdg-open ${report.html}"/>
-        </exec>
     </target>
 
     <!--

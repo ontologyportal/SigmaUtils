@@ -16,13 +16,13 @@ public class MapUtils {
 
     /** ***************************************************************
      */
-    public static void addToMapMap(HashMap<String, HashMap<String, HashSet<String>>> mapmap, String superkey, String key, String element) {
+    public static void addToMapMap(Map<String, Map<String, Set<String>>> mapmap, String superkey, String key, String element) {
 
-        HashMap<String, HashSet<String>> map = mapmap.get(superkey);
+        Map<String, Set<String>> map = mapmap.get(superkey);
         if (map == null)
             map = new HashMap<>();
         mapmap.put(superkey,map);
-        HashSet<String> set = map.get(key);
+        Set<String> set = map.get(key);
         if (set == null)
             set = new HashSet<>();
         set.add(element);
@@ -69,9 +69,9 @@ public class MapUtils {
     /** ***************************************************************
      * utility method to add frequency counts of keys
      */
-    public static void addToSortedFreqMap(Map<Integer, HashSet<String>> map, String key, int count) {
+    public static void addToSortedFreqMap(Map<Integer, Set<String>> map, String key, int count) {
 
-        HashSet<String> al = map.get(count);
+        Set<String> al = map.get(count);
         if (al == null)
             al = new HashSet<>();
         al.add(key);
@@ -81,9 +81,9 @@ public class MapUtils {
     /** ***************************************************************
      * utility method to merge frequency counts of keys
      */
-    public static TreeMap<Integer, HashSet<String>> toSortedFreqMap(Map<String, Integer> map) {
+    public static Map<Integer, Set<String>> toSortedFreqMap(Map<String, Integer> map) {
 
-        TreeMap<Integer, HashSet<String>> result = new TreeMap<>();
+        Map<Integer, Set<String>> result = new TreeMap<>();
         for (String s : map.keySet()) {
             int val = map.get(s);
             addToSortedFreqMap(result,s,val);
@@ -93,7 +93,7 @@ public class MapUtils {
 
     /** ***************************************************************
      */
-    public static String sortedFreqMapToString(Map<Integer, HashSet<String>> map) {
+    public static String sortedFreqMapToString(Map<Integer, Set<String>> map) {
 
         StringBuilder sb = new StringBuilder();
         for (int i : map.keySet())
@@ -104,11 +104,12 @@ public class MapUtils {
     /** ***************************************************************
      * utility method to merge frequency counts of keys
      */
-    public static HashMap<String, TreeMap<Integer,HashSet<String>>> toKeyedSortedFreqMap(Map<String, HashMap<String, Integer>> map) {
+    public static Map<String, Map<Integer,Set<String>>> toKeyedSortedFreqMap(Map<String, Map<String, Integer>> map) {
 
-        HashMap<String, TreeMap<Integer,HashSet<String>>> result = new HashMap<>();
+        Map<String, Map<Integer,Set<String>>> result = new HashMap<>();
+        Map<Integer, Set<String>> sorted;
         for (String key : map.keySet()) {
-            TreeMap<Integer, HashSet<String>> sorted = toSortedFreqMap(map.get(key));
+            sorted = toSortedFreqMap(map.get(key));
             result.put(key,sorted);
         }
         return result;

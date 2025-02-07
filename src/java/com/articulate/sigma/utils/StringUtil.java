@@ -20,10 +20,12 @@ Adam Pease apease@articulatesoftware.com
 package com.articulate.sigma.utils;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.*;
@@ -75,7 +77,7 @@ public class StringUtil {
         try {
             encoded = URLEncoder.encode(input, getCharset());
         }
-        catch (Exception ex) {
+        catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
         return encoded;
@@ -95,7 +97,7 @@ public class StringUtil {
         try {
             decoded = URLDecoder.decode(input, getCharset());
         }
-        catch (Exception ex) {
+        catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
         return decoded;
@@ -217,7 +219,7 @@ public class StringUtil {
         try {
             ans = (new String(com.articulate.sigma.utils.Base64.encodeBytes(input.getBytes(charset)).getBytes(), charset)).trim();
         }
-        catch (Exception ex) {
+        catch (UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
         return ans;
@@ -238,7 +240,7 @@ public class StringUtil {
         try {
             ans = (new String(com.articulate.sigma.utils.Base64.decode(input), charset)).trim();
         }
-        catch (Exception ex) {
+        catch (IOException ex) {
             ex.printStackTrace();
         }
         return ans;
@@ -264,8 +266,8 @@ public class StringUtil {
             byte[] raw = md.digest();
             encrypted = new String(raw, charset);
         }
-        catch (Exception e) {
-            System.out.println(e.getMessage());
+        catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+            System.err.println(e.getMessage());
             e.printStackTrace();
         }
         return encrypted;
@@ -348,17 +350,17 @@ public class StringUtil {
         for (int i = 1; i < input.length(); i++) {
             if (Character.isUpperCase(charar[i]) && Character.isLowerCase(charar[i-1])) {
                 if (lowercase)
-                    sb.append(" " + Character.toLowerCase(charar[i]));
+                    sb.append(" ").append(Character.toLowerCase(charar[i]));
                 else
-                    sb.append(" " + charar[i]);
+                    sb.append(" ").append(charar[i]);
             }
             else {
                 if (i < input.length()-1 && Character.isUpperCase(charar[i]) &&
                         Character.isLowerCase(charar[i+1])) {
                     if (lowercase)
-                        sb.append(" " + Character.toLowerCase(charar[i]));
+                        sb.append(" ").append(Character.toLowerCase(charar[i]));
                     else
-                        sb.append(" " + charar[i]);
+                        sb.append(" ").append(charar[i]);
                 }
                 else
                     sb.append(charar[i]);
@@ -375,7 +377,7 @@ public class StringUtil {
         char lastChar = ' ';
         for (char c : input.toCharArray()) {
             if (Character.isUpperCase(c) && Character.isLowerCase(lastChar))
-                sb.append("_" + c);
+                sb.append("_").append(c);
             else
                 sb.append(c);
             lastChar = c;
@@ -518,7 +520,7 @@ public class StringUtil {
      */
     public static String removePunctuation(String sentence) {
 
-        Matcher m = null;
+        Matcher m;
         if (StringUtil.emptyString(sentence))
             return sentence;
         m = Pattern.compile("(\\w)\\'re").matcher(sentence);
@@ -526,7 +528,7 @@ public class StringUtil {
         while (m.find()) {
             //System.out.println("matches");
             String group = m.group(1);
-            sentence = m.replaceFirst(group).toString();
+            sentence = m.replaceFirst(group);
             m.reset(sentence);
         }
         m = Pattern.compile("(\\w)\\'m").matcher(sentence);
@@ -534,7 +536,7 @@ public class StringUtil {
         while (m.find()) {
             //System.out.println("matches");
             String group = m.group(1);
-            sentence = m.replaceFirst(group).toString();
+            sentence = m.replaceFirst(group);
             m.reset(sentence);
         }
         m = Pattern.compile("(\\w)n\\'t").matcher(sentence);
@@ -542,7 +544,7 @@ public class StringUtil {
         while (m.find()) {
             //System.out.println("matches");
             String group = m.group(1);
-            sentence = m.replaceFirst(group).toString();
+            sentence = m.replaceFirst(group);
             m.reset(sentence);
         }
         m = Pattern.compile("(\\w)\\'ll").matcher(sentence);
@@ -550,7 +552,7 @@ public class StringUtil {
         while (m.find()) {
             //System.out.println("matches");
             String group = m.group(1);
-            sentence = m.replaceFirst(group).toString();
+            sentence = m.replaceFirst(group);
             m.reset(sentence);
         }
         m = Pattern.compile("(\\w)\\'s").matcher(sentence);
@@ -558,7 +560,7 @@ public class StringUtil {
         while (m.find()) {
             //System.out.println("matches");
             String group = m.group(1);
-            sentence = m.replaceFirst(group).toString();
+            sentence = m.replaceFirst(group);
             m.reset(sentence);
         }
         m = Pattern.compile("(\\w)\\'d").matcher(sentence);
@@ -566,7 +568,7 @@ public class StringUtil {
         while (m.find()) {
             //System.out.println("matches");
             String group = m.group(1);
-            sentence = m.replaceFirst(group).toString();
+            sentence = m.replaceFirst(group);
             m.reset(sentence);
         }
         m = Pattern.compile("(\\w)\\'ve").matcher(sentence);
@@ -574,7 +576,7 @@ public class StringUtil {
         while (m.find()) {
             //System.out.println("matches");
             String group = m.group(1);
-            sentence = m.replaceFirst(group).toString();
+            sentence = m.replaceFirst(group);
             m.reset(sentence);
         }
         sentence = sentence.replaceAll("\\'", "");
@@ -625,7 +627,7 @@ public class StringUtil {
      * isJavaIdentifierPart() isn't sufficient, since it allows
      * characters KIF doesn't
      */
-    public static String arrayListToSpacedString(ArrayList<String> al) {
+    public static String arrayListToSpacedString(List<String> al) {
 
         if (al == null || al.size() < 1)
             return "";
@@ -1071,13 +1073,15 @@ public class StringUtil {
                 int tlen = token.length();
                 StringBuilder sb = new StringBuilder(output);
                 int p1f = sb.indexOf(token);
+                String pattern;
+                int p1b, p2b, p2f;
                 while (p1f > -1) {
-                    int p1b = (p1f + tlen);
+                    p1b = (p1f + tlen);
                     if (p1b < sb.length()) {
-                        int p2f = sb.indexOf(token, p1b);
+                        p2f = sb.indexOf(token, p1b);
                         if (p2f > -1) {
-                            String pattern = sb.substring(p1b, p2f);
-                            int p2b = (p2f + tlen);
+                            pattern = sb.substring(p1b, p2f);
+                            p2b = (p2f + tlen);
                             sb.replace(p1f, p2b, getDateTime(pattern));
                             p1f = sb.indexOf(token);
                         }
@@ -1134,7 +1138,7 @@ public class StringUtil {
 
         boolean isValidInteger = false;
         try {
-            Integer.parseInt(s.trim()); // s is a valid integer
+            Integer.valueOf(s.trim()); // s is a valid integer
             isValidInteger = true;
         }
         catch (NumberFormatException ex) {
@@ -1207,10 +1211,7 @@ public class StringUtil {
      */
     public static boolean isPunct(String s) {
 
-        if (Pattern.matches("\\p{Punct}", s))
-            return true;
-        else
-            return false;
+        return Pattern.matches("\\p{Punct}", s);
     }
 
     /****************************************************************
@@ -1224,10 +1225,7 @@ public class StringUtil {
         catch (PatternSyntaxException e) {
             exc = e;
         }
-        if (exc != null)
-            return false;
-        else
-            return true;
+        return exc == null;
     }
 
     /****************************************************
@@ -1236,11 +1234,9 @@ public class StringUtil {
 
         if (StringUtil.emptyString(term))
             return false;
-        if (term.contains("(") || term.contains("[") || term.contains("{") || term.contains("\\") || term.contains("^")
+        return term.contains("(") || term.contains("[") || term.contains("{") || term.contains("\\") || term.contains("^")
                 || term.contains("$") || term.contains("|") || term.contains("}") || term.contains("]")
-                || term.contains(")") || term.contains("?") || term.contains("*") || term.contains("+"))
-            return true;
-        return false;
+                || term.contains(")") || term.contains("?") || term.contains("*") || term.contains("+");
     }
 
     /****************************************************************
@@ -1249,21 +1245,21 @@ public class StringUtil {
     public static boolean isNumeric(String input) {
 
         try {
-            Integer.parseInt(input);
+            Integer.valueOf(input);
             return true;
         }
         catch (NumberFormatException e) {
             // s is not numeric
         }
         try {
-            Double.parseDouble(input);
+            Double.valueOf(input);
             return true;
         }
         catch (NumberFormatException e) {
             // s is not numeric
         }
         try {
-            Float.parseFloat(input);
+            Float.valueOf(input);
             return true;
         }
         catch (NumberFormatException e) {
@@ -1425,9 +1421,7 @@ public class StringUtil {
         String trimmed = input.trim();
         if (trimmed.charAt(0) == '\'' && trimmed.charAt(trimmed.length()-1) == '\'')
             return true;
-        if (trimmed.charAt(0) == '\"' && trimmed.charAt(trimmed.length()-1) == '\"')
-            return true;
-        return false;
+        return trimmed.charAt(0) == '\"' && trimmed.charAt(trimmed.length()-1) == '\"';
     }
 
     /****************************************************************
@@ -1510,7 +1504,7 @@ public class StringUtil {
                 result = new File(base + "-" + fc + suff);
             }
         }
-        catch (Exception ex) {
+        catch (IOException ex) {
             ex.printStackTrace();
         }
         return result;
@@ -1598,8 +1592,8 @@ public class StringUtil {
             else
                 return ID;
         }
-        catch (Exception pe) {
-            System.out.println("Error in StringUtil.incStrInteger(): bad input: " + intval);
+        catch (NumberFormatException pe) {
+            System.err.println("Error in StringUtil.incStrInteger(): bad input: " + intval);
             return intval;
         }
     }
@@ -1671,7 +1665,7 @@ public class StringUtil {
      */
     public static String fillString(String st, char fillchar, int totalLength, boolean prepend) {
 
-        StringBuilder result = null;
+        StringBuilder result;
         if (st != null)
             result = new StringBuilder(st);
         else
@@ -1686,19 +1680,20 @@ public class StringUtil {
     }
 
     /** *****************************************************************
+        TODO: Non functional 2/6/25 tdn
      */
     public static boolean urlExists(String URLName) {
 
         boolean result = false;
         try {
-            URL url = new URL("ftp://ftp1.freebsd.org/pub/FreeBSD/");
+            URL url = URI.create(URLName).toURL();
             InputStream input = url.openStream();
-            return true;
+            result = input != null;
         }
-        catch (Exception ex) {
-            System.out.println("error in StringUtil.urlExists()");
+        catch (IOException ex) {
+            System.err.println("error in StringUtil.urlExists(): " + ex);
         }
-        return false;
+        return result;
     }
 
     /** *****************************************************************
@@ -1712,25 +1707,19 @@ public class StringUtil {
         //...checks on aFile are elided
         StringBuilder contents = new StringBuilder();
 
-        try {
-            //use buffering, reading one line at a time
-            //FileReader always assumes default encoding is OK!
-            BufferedReader input =  new BufferedReader(new FileReader(aFile));
-            try {
-                String line = null; //not declared within while loop
+        try ( //use buffering, reading one line at a time
+        //FileReader always assumes default encoding is OK!
+                BufferedReader input = new BufferedReader(new FileReader(aFile))) {
+            String line; //not declared within while loop
         /*
         * readLine is a bit quirky :
         * it returns the content of a line MINUS the newline.
         * it returns null only for the END of the stream.
         * it returns an empty String if two newlines appear in a row.
         */
-                while (( line = input.readLine()) != null){
-                    contents.append(line);
-                    contents.append(System.getProperty("line.separator"));
-                }
-            }
-            finally {
-                input.close();
+            while (( line = input.readLine()) != null){
+                contents.append(line);
+                contents.append(System.getProperty("line.separator"));
             }
         }
         catch (IOException ex){
@@ -1774,7 +1763,7 @@ public class StringUtil {
      */
     public static void main(String args[]) {
 
-        //System.out.println(StringUtil.fillString("111",'0',8,true));
+        System.out.println(StringUtil.fillString("111",'0',8,true));
         System.out.println(StringUtil.camelCaseToSep("ArtesiaMunicipalNMAirport"));
     }
 }

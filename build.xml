@@ -32,11 +32,23 @@
     <property name="app.name" value="sigmaUtils"/>
     <property name="build.home" value="build"/>
     <property name="build.classes" value="${build.home}/classes"/>
-    <property name="build.test.classes" value="${build.home}/test-classes"/>
+    <property name="build.test.classes" value="${build.home}/test/classes"/>
     <!--<property name="build.lib" value="${build.home}/lib"/>-->
     <property environment="env"/>
 
     <property name="javac.release" value="11"/>
+    <property name="unit.test.suite" value="com.articulate.sigma.UnitTestSuite"/>
+    <property name="reports.dir" value="${build.home}/test/results"/>
+    <property name="report.html" value="file:${basedir}/${reports.dir}/html/index.html"/>
+
+    <condition property="isUnixNotMac">
+        <and>
+            <os family="unix"/>
+            <not>
+                <os family="mac"/>
+            </not>
+        </and>
+    </condition>
 
     <target name="init" depends="init-ivy">
         <echo>Java Version via Ant: ${ant.java.version}</echo>
@@ -86,20 +98,60 @@
             <src refid="test.sourcepath"/>
             <classpath refid="classpath.test"/>
         </javac>
+        <mkdir dir="${reports.dir}"/>
     </target>
 
-    <target name="test" depends="test-compile">
-        <junit printsummary="on" haltonfailure="yes" fork="true">
+    <!--
+    ==========
+    UNIT TESTS
+    ==========
+    -->
+
+    <target name="test" depends="test.unit"/>
+    <target name="test.unit" depends="test-compile" description="Runs the UnitTestSuite">
+        <junit printsummary="on"
+               showoutput="yes"
+               haltonfailure="yes"
+               fork="true">
+            <formatter type="plain" usefile="false"/>
             <classpath>
                 <path refid="classpath.test"/>
                 <pathelement location="${build.test.classes}"/>
             </classpath>
-            <formatter type="brief" usefile="false"/>
-            <batchtest>
-                <fileset dir="test/unit/java" includes="**/*Test.java"/>
-            </batchtest>
+            <test name="${unit.test.suite}" haltonfailure="no" todir="${reports.dir}">
+                <formatter type="xml"/>
+            </test>
         </junit>
+        <antcall target="junit.report"/>
     </target>
+    <target name="junit.report" >
+        <junitreport todir="${reports.dir}">
+            <fileset dir="${reports.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${reports.dir}/html"/>
+        </junitreport>
+        <!--<antcall target="open.junit.report"/>-->
+    </target>
+    <target name="open.junit.report" depends="report.mac,report.unix"/>
+    <target name="report.mac" unless="isUnixNotMac">
+        <exec executable="sh" osfamily="mac">
+            <arg value="-c"/>
+            <arg value="open -u ${report.html}"/>
+        </exec>
+    </target>
+    <target name="report.unix" if="isUnixNotMac">
+        <exec executable="sh" osfamily="unix">
+            <arg value="-c"/>
+            <arg value="xdg-open ${report.html}"/>
+        </exec>
+    </target>
+
+    <!--
+    =====
+    ADMIN
+    =====
+    -->
 
     <!-- target name="all" depends="dist, api_doc" -->
     <target name="all" depends="clean,test">
