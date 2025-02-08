@@ -91,7 +91,7 @@ public class PairMap {
      * Save a pair map to a text file (in the current directory if
      * just a bare filename is supplied)
      */
-    public static void saveMap(HashMap<String, HashMap<String,Integer>> map, String filename) {
+    public static void saveMap(Map<String, Map<String,Integer>> map, String filename) {
 
         File f = new File(filename);
         try (PrintWriter pw = new PrintWriter(f)) {
