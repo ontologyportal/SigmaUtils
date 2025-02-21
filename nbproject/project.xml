@@ -105,7 +105,7 @@ auxiliary.show.customizer.message=<message>
             </ide-actions>
             <export>
                 <type>folder</type>
-                <location>build/test-classes}</location>
+                <location>build/test/classes</location>
                 <script>${ant.script}</script>
                 <build-target>test-compile</build-target>
             </export>
