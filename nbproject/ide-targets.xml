@@ -105,7 +105,7 @@
             <classpath>
                 <path refid="tcp"/>
             </classpath>
-            <test name="${test.class}" haltonfailure="no">
+            <test name="${test.class}" haltonfailure="no" todir="${reports.dir}">
                 <formatter type="xml"/>
             </test>
         </junit>
