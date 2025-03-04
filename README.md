@@ -1,5 +1,5 @@
 # SigmaUtils
-Sigma utilities refactored from sigmakee
+Sigma utilities refactored from sigmakee into its own code base
 
 ## To build/run/debug/test using the NetBeans IDE
 Define a nbproject/private/private.properties file with these keys:
