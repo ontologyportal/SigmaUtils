@@ -94,7 +94,7 @@
     ===================
     -->
 
-    <target name="run-selected-test-in-unit" depends="clean,test-compile">
+    <target name="run-selected-test-in-unit" depends="clean,compile.test">
         <fail unless="test.class">Must set property 'test.class'</fail>
         <junit printsummary="yes"
                haltonfailure="yes"
