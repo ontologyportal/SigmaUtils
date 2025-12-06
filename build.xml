@@ -33,7 +33,6 @@
     <property name="build.home" value="build"/>
     <property name="build.classes" value="${build.home}/classes"/>
     <property name="build.test.classes" value="${build.home}/test/classes"/>
-    <!--<property name="build.lib" value="${build.home}/lib"/>-->
     <property environment="env"/>
 
     <property name="javac.release" value="11"/>
@@ -67,9 +66,6 @@
                release="${javac.release}">
             <src refid="core.sourcepath"/>
         </javac>
-<!--        <copy todir="${build.lib}">
-            <fileset dir="${basedir}/lib"/>
-        </copy>-->
     </target>
 
     <path id="core.sourcepath">
