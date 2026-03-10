@@ -1244,6 +1244,10 @@ public class StringUtil {
      */
     public static boolean isNumeric(String input) {
 
+        if (emptyString(input)) return false;
+        char first = input.charAt(0);
+        if (!Character.isDigit(first) && first != '-' && first != '+' && first != '.')
+            return false;   // fast path: letters, '?', '@', etc. → not numeric
         try {
             Integer.valueOf(input);
             return true;
@@ -1253,13 +1257,6 @@ public class StringUtil {
         }
         try {
             Double.valueOf(input);
-            return true;
-        }
-        catch (NumberFormatException e) {
-            // s is not numeric
-        }
-        try {
-            Float.valueOf(input);
             return true;
         }
         catch (NumberFormatException e) {
