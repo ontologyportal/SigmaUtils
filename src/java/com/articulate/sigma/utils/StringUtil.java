@@ -1343,6 +1343,17 @@ public class StringUtil {
     }
 
     /***************************************************************
+     * Takes a file path as input and returns just the file name;
+     * 
+     * @param fileNameWithPath The String file path ending with the file name.
+     * @return String Just the filename without the path.
+     */
+    public static String removeFilePath(String fileNameWithPath) { 
+
+        return fileNameWithPath.substring(fileNameWithPath.lastIndexOf("/") + 1);
+    }
+
+    /***************************************************************
      * Replaces the namespace delimiter in term with a string that is
      * safe for inference, and for all common file systems.
      */
