@@ -1147,6 +1147,23 @@ public class StringUtil {
         return isValidInteger;
     }
 
+    /*****************************************************************
+     * Returns true if a string is a valid boolean config value.
+     * @param value string value.
+     * @return true if value is a valid boolean.
+     */
+    public static boolean isBoolean(String value) {
+
+        if (StringUtil.emptyString(value)) return false;
+        String normalized = value.trim().toLowerCase();
+        return normalized.equals("true") ||
+                normalized.equals("false") ||
+                normalized.equals("yes") ||
+                normalized.equals("no") ||
+                normalized.equals("1") ||
+                normalized.equals("0");
+    }
+
     /****************************************************************
      * Returns true if input appears to be a quoted String, else
      * returns false.
