@@ -17,9 +17,6 @@ August 9, Acapulco, Mexico. See also http://github.com/ontologyportal
 
 package com.articulate.sigma.utils;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /********************************************************************
  * Class to replace System calls to make logging easier and more consistent.
  * @author Shaun Rose
@@ -216,5 +213,42 @@ public class LoggingUtils {
             .map(frame -> new LogSite(frame.getDeclaringClass().getSimpleName(), frame.getMethodName()))
             .orElse(new LogSite("UnknownClass", "unknownMethod"))
         );
+    }
+
+    /********************************************************************
+     * Prints the current call stack up to the requested depth.
+     * @param depth Maximum number of stack frames to print.
+     */
+    public static void printStackTrace(int depth) {
+
+        if (depth <= 0) return;
+        synchronized (LOG_LOCK) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Current stack trace, depth=").append(depth);
+            STACK_WALKER.walk(frames -> {
+                frames
+                    .filter(frame -> !frame.getClassName().equals(LoggingUtils.class.getName()))
+                    .limit(depth)
+                    .forEach(frame -> {
+                        sb.append(System.lineSeparator())
+                        .append("    at ")
+                        .append(frame.getClassName())
+                        .append(".")
+                        .append(frame.getMethodName())
+                        .append("(");
+                        String fileName = frame.getFileName();
+                        int lineNumber = frame.getLineNumber();
+                        if (fileName == null) sb.append("Unknown Source");
+                        else {
+                            sb.append(fileName);
+                            if (lineNumber >= 0)
+                                sb.append(":").append(lineNumber);
+                        }
+                        sb.append(")");
+                    });
+                return null;
+            });
+            System.err.println(sb);
+        }
     }
 }
