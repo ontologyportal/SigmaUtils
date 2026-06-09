@@ -251,4 +251,15 @@ public class LoggingUtils {
             System.err.println(sb);
         }
     }
+
+    public static void printSigmaWelcome() {
+
+        System.out.println("  _________.___  ________    _____      _____  ____  ___.___________ __________");
+        System.out.println(" /   _____/|   |/  _____/   /     \\    /  _  \\|    |/  _|\\_   _____/ \\_   _____/");
+        System.out.println(" \\_____  \\ |   /   \\  ___  /  \\ /  \\  /  /_\\  \\       <   |    __)_   |    __)_");
+        System.out.println(" /        \\|   \\    \\_\\  \\/    V    \\/    |    \\    |  \\  |        \\  |        \\");
+        System.out.println("/_______  /|___|\\______  /\\____|__  /\\____|__  /____|__ \\/_______  / /_______  /");
+        System.out.println("        \\/             \\/         \\/         \\/        \\/        \\/          \\/");
+        System.out.println("Home: http://ontologyportal.github.io/sigmakee/");
+    }
 }
