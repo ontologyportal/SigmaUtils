@@ -29,6 +29,18 @@ public class StringUtilTest {
     /** *****************************************************************
      */
     @Test
+    public void testRemoveFilePath() {
+
+        assertEquals("Merge.kif", StringUtil.removeFilePath("/home/user/sumo/Merge.kif"));
+        assertEquals("Merge.kif", StringUtil.removeFilePath("C:\\sumo\\Merge.kif"));
+        assertEquals("Merge.kif", StringUtil.removeFilePath("Merge.kif"));
+        assertEquals("", StringUtil.removeFilePath(""));
+        assertEquals(null, StringUtil.removeFilePath(null));
+    }
+
+    /** *****************************************************************
+     */
+    @Test
     public void testIsInteger() {
 
         assertTrue(StringUtil.isInteger("53"));
