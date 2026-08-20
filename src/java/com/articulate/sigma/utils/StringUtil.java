@@ -601,6 +601,26 @@ public class StringUtil {
     }
 
     /****************************************************************
+     * Strip a full or relative file path down to just the file name,
+     * so two references to the same file (e.g. one from a KB
+     * constituent list, one from a dependency scan run against a
+     * different base directory) compare equal regardless of where each
+     * one was resolved from. Handles both '/' and '\' separators since
+     * paths may originate from either a Unix KB directory or a
+     * Windows-hosted caller. A path with no separator is returned
+     * unchanged; a null or empty input is returned as-is.
+     * @param path A file path, absolute or relative
+     * @return Just the file name portion of path
+     */
+    public static String removeFilePath(String path) {
+
+        if (path == null || path.isEmpty())
+            return path;
+        int lastSlash = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+        return (lastSlash < 0) ? path : path.substring(lastSlash + 1);
+    }
+
+    /****************************************************************
      * @param str A String
      * @return A String with space characters normalized to match the
      * conventions for written English text.  All linefeeds and
